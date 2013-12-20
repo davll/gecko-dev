@@ -54,6 +54,11 @@
 #include "prprf.h"
 #endif
 
+// Face Detection
+#include <opencv2/objdetect.hpp>
+#include <opencv2/ocl.hpp>
+#include <CL/cl.h>
+
 #include "NullTransport.h"
 
 namespace mozilla {
@@ -258,6 +263,19 @@ private:
   nsString mUniqueId;
 
   void ChooseCapability(const MediaEnginePrefs &aPrefs);
+
+  // Face Detection
+#define MOZ_OPENCV_USE_OPENCL true
+#if MOZ_OPENCV_USE_OPENCL
+  cv::ocl::OclCascadeClassifier mFaceDetector;
+#else
+  cv::CascadeClassifier mFaceDetector;
+#endif
+  double mFaceDetectionTime[6];
+  uint64_t mFaceDetectionCount;
+  void InitFaceDetection();
+  void ShutdownFaceDetection();
+  void DetectFaces(nsTArray<nsRect>& aFaces);
 };
 
 class MediaEngineWebRTCAudioSource : public MediaEngineAudioSource,

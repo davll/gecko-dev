@@ -105,6 +105,10 @@ MediaEngineWebRTCVideoSource::DeliverFrame(
   // implicitly releases last image
   mImage = image.forget();
 
+  // Face Detection
+  nsTArray<nsRect> faces;
+  DetectFaces(faces);
+
   return 0;
 }
 #endif
@@ -455,6 +459,8 @@ MediaEngineWebRTCVideoSource::Init()
   CopyUTF8toUTF16(uniqueId, mUniqueId);
 #endif
 
+  InitFaceDetection();
+
   mInitDone = true;
 }
 
@@ -465,6 +471,9 @@ MediaEngineWebRTCVideoSource::Shutdown()
   if (!mInitDone) {
     return;
   }
+
+  ShutdownFaceDetection();
+
 #ifdef MOZ_B2G_CAMERA
   ReentrantMonitorAutoEnter sync(mCallbackMonitor);
 #endif

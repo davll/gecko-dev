@@ -22,6 +22,7 @@ if CONFIG['MOZ_WEBRTC']:
     # MediaEngineWebRTC.cpp needs to be built separately.
     SOURCES += [
         'MediaEngineWebRTC.cpp',
+        'MediaEngineWebRTCFaceDetection.cpp',
     ]
     LOCAL_INCLUDES += [
         '/dom/base',
